@@ -16,3 +16,7 @@ export const setStage = (uuid, id, timestamp) => {
     // 다음 스테이지 ID
     return stages[uuid].push({id, timestamp});
 };
+
+export const clearStage = (uuid) => {
+    return stages[uuid] = [];
+}

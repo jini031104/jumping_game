@@ -8,6 +8,7 @@ const server = createServer(app);   // 이걸 이용해 서버를 키고, 웹 �
 
 const PORT = 3000;
 
+app.use(express.static('public'));
 app.use(express.json());
 // "query string"(일명 qs) 라이브러리로 URL-encoded 데이터를 파싱할지(true) 안 할지에 대한 설정
 app.use(express.urlencoded({extended: false}));

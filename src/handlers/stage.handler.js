@@ -4,8 +4,13 @@ import { getStage, setStage } from "../models/stage.model.js";
 export const moveStageHandler = (userId, payload) => {
     // 유저의 현재 스테이지 배열을 가져온다.
     let currentStages = getStage(userId);
-    if(!currentStages.length)
-        return {status: 'fail', message: 'No stages found for user'};
+    console.log(userId);
+    console.log(getStage(userId));
+    console.log("currentStages: ");
+    console.log(currentStages); 
+    if(!currentStages.length) {
+        return {status: 'fail', message: 'No stages found for user(stage handler)'};
+    }
 
     // 유저의 현재 스테이지 ID를 가져온다
     currentStages.sort((a, b) => a.id - b.id);
@@ -13,6 +18,8 @@ export const moveStageHandler = (userId, payload) => {
     //const currentStageId = currentStages[currentStages.length - 1].id;
 
     // 클라이언트 vs 서버 비교
+    console.log(`currentStage.id: ${currentStage.id}, payload.currentStage: ${payload.currentStage}`);
+    console.log('-----------', payload);
     if(currentStage.id !== payload.currentStage) {
         return {status: 'fail', message: 'Current stage missmatch'};
     }
@@ -21,7 +28,7 @@ export const moveStageHandler = (userId, payload) => {
     const serverTime = Date.now();  // 현재 시간
     const elapsedTime = (serverTime - currentStage.timestamp) / 1000;   // 경과 시간
     // 1 -> 2로 넘어가는 가정
-    if(elapsedTime < 100 || elapsedTime > 105) {
+    if(elapsedTime < 10 || elapsedTime > 11) {
         return {status: 'fail', message: 'Invalid elapsed time'};
     }
 
