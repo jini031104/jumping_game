@@ -48,6 +48,6 @@ export const gameEnd = (uuid, payload) => {
 
     // 유저 경험을 위해 score는 클라이언트 기준으로...
     // 만약 DB에 저장을 한다면, saveGameResult(userId, clientScore, gameEndTime);을 사용해서...
-    console.log('game End!!');
+    console.log('game End!!: ' + score);
     return {status: 'success', message: 'Game ended successfully', score};
 };

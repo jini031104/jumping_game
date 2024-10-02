@@ -5,6 +5,9 @@ import Score from './Score.js';
 import ItemController from './ItemController.js';
 import './Socket.js';
 import { sendEvent } from './Socket.js';
+import stageData from '../assets/stage.json' with { type: 'json' };
+
+console.log(stageData);
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -124,6 +127,7 @@ function setScreen() {
   scaleRatio = getScaleRatio();
   canvas.width = GAME_WIDTH * scaleRatio;
   canvas.height = GAME_HEIGHT * scaleRatio;
+  console.log('setScreen을 설정');  // 화면 크기가 바뀔 때마다 score이 초기화됨...
   createSprites();
 }
 
@@ -134,6 +138,7 @@ if (screen.orientation) {
   screen.orientation.addEventListener('change', setScreen);
 }
 
+let gameEndCheck = false;
 function showGameOver() {
   const fontSize = 70 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
@@ -141,7 +146,10 @@ function showGameOver() {
   const x = canvas.width / 4.5;
   const y = canvas.height / 2;
   ctx.fillText('GAME OVER', x, y);
-  sendEvent(3, {timestamp: Date.now()});
+  if(gameEndCheck) {
+    console.log('client_score: ', score);
+    sendEvent(3, {timestamp: Date.now()});
+  }
 }
 
 function showStartGameText() {
@@ -161,6 +169,7 @@ function reset() {
   hasAddedEventListenersForRestart = false;
   gameover = false;
   waitingToStart = false;
+  gameEndCheck = true;
 
   ground.reset();
   cactiController.reset();
@@ -231,6 +240,7 @@ function gameLoop(currentTime) {
 
   if (gameover) {
     showGameOver();
+    gameEndCheck = false;
   }
 
   if (waitingToStart) {
