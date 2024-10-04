@@ -5,9 +5,6 @@ import Score from './Score.js';
 import ItemController from './ItemController.js';
 import './Socket.js';
 import { sendEvent } from './Socket.js';
-import stageData from '../assets/stage.json' with { type: 'json' };
-
-console.log(stageData);
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -148,7 +145,7 @@ function showGameOver() {
   ctx.fillText('GAME OVER', x, y);
   if(gameEndCheck) {
     console.log('client_score: ', score);
-    sendEvent(3, {timestamp: Date.now()});
+    sendEvent(3, {timestamp: Date.now(), score: score});
   }
 }
 
@@ -175,7 +172,9 @@ function reset() {
   cactiController.reset();
   score.reset();
   gameSpeed = GAME_SPEED_START;
-  sendEvent(2, {timestamp: Date.now()});  // 추가
+  const startTime = Date.now();
+  console.log(`game Start: ${startTime}`);
+  sendEvent(2, {timestamp: startTime});  // 게임 시작 핸들러 작동
 }
 
 function setupGameReset() {

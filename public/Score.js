@@ -1,8 +1,11 @@
 import { sendEvent } from "./Socket.js";
+import stageData from '../assets/stage.json' with { type: 'json' };
+
+const stage = stageData.data;
 
 class Score {
   score = 0;
-  stageChange = true;
+  level = 0;
   HIGH_SCORE_KEY = 'highScore';
 
   constructor(ctx, scaleRatio) {
@@ -12,20 +15,26 @@ class Score {
   }
 
   update(deltaTime) {
-    this.score += deltaTime * 0.001;
-    if(Math.floor(this.score) === 10 && this.stageChange) {
-      console.log('next stage!');
-      this.stageChange = false;
-      sendEvent(11, {currentStage: 1000, targetStage: 1001});
+    this.score += deltaTime * 0.001 * stage[this.level].scorePerSecond;
+
+    // 준비된 스테이지 데이터 길이보다 작고
+    // 다음 단계로 도달하기 위한 점수보다 클 경우
+    if(this.level + 1 < stage.length &&
+      Math.floor(this.score) >= stage[this.level + 1].score) {
+      sendEvent(11, {currentStage: stage[this.level].id, targetStage: stage[this.level + 1].id});
+      this.level++;
+      console.log('score: ', this.score);
+      console.log('next level: ', this.level);
     }
   }
 
-  getItem(itemId) {
+  getItem(itemId) { // 아이템을 얻었을 때
     this.score += 0;
   }
 
   reset() {
     this.score = 0;
+    this.level = 0;
   }
 
   setHighScore() {
@@ -55,6 +64,7 @@ class Score {
 
     this.ctx.fillText(scorePadded, scoreX, y);
     this.ctx.fillText(`HI ${highScorePadded}`, highScoreX, y);
+    this.ctx.fillText(`Level ${this.level}`, highScoreX - 100, y);
   }
 }
 

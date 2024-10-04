@@ -14,14 +14,7 @@ export const handleConnection = (socket, uuid) => {
     console.log(`New user connected ${uuid} with socket ID ${socket.id}`);
     console.log('Current users: ', getUsers());    // 현재 접속 중인 유저들의 전체 정보
 
-    // gameStart()로 이동
-    // // 서버 메모리에 있는 게임 에셋에서 stage 정보를 가지고 온다.
-    // const {stages} = getGameAssets();
-    // // stages 배열의 0번째 = 첫번째 스테이지
-    // setStage(uuid, stages.data[0].id);
-    // console.log(`Stage: ${getStage(uuid)}`);
-
-    // 스테이지 빈 배열 생성
+    // 유저ID마다 스테이지 빈 배열 생성
     createStage(uuid);
 
     // emit 메서드로 해당 유저에게 메시지를 전달할 수 있다.
@@ -32,7 +25,7 @@ export const handleConnection = (socket, uuid) => {
 // data = payload
 export const handlerEvent = (io, socket, data) => {
     // 서버에 저장된 클라이언트 배열에서 메시지로 받은 clientVersion을 확인한다.
-    console.log(`handlerEvent_data ${data.userId}`);
+    console.log(`handlerEvent_userData ${data.userId}`);
     if(!CLIENT_VERSION.includes(data.clientVersion)) {
         socket.emit('response', {status: 'fail', message: 'Client version missmatch'});
         return ;
