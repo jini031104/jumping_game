@@ -8,10 +8,11 @@ class Score {
   level = 0;
   HIGH_SCORE_KEY = 'highScore';
 
-  constructor(ctx, scaleRatio) {
+  constructor(ctx, scaleRatio, itemController) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.scaleRatio = scaleRatio;
+    this.itemController = itemController;
   }
 
   update(deltaTime) {
@@ -23,18 +24,19 @@ class Score {
       Math.floor(this.score) >= stage[this.level + 1].score) {
       sendEvent(11, {currentStage: stage[this.level].id, targetStage: stage[this.level + 1].id});
       this.level++;
-      console.log('score: ', this.score);
-      console.log('next level: ', this.level);
+      this.itemController.setCurrentStage(stage[this.level].id);
     }
   }
 
   getItem(itemId) { // 아이템을 얻었을 때
-    this.score += 0;
+    this.score += this.itemController.getItemScore(itemId);
+    sendEvent(12, {itemId});
   }
 
   reset() {
     this.score = 0;
     this.level = 0;
+    this.itemController.setCurrentStage(1000);
   }
 
   setHighScore() {

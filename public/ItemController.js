@@ -1,13 +1,12 @@
 import Item from "./Item.js";
+import Item_Unlock from "../assets/item_unlock.json" with { type: 'json' };
 
 class ItemController {
-
     INTERVAL_MIN = 0;
-    INTERVAL_MAX = 12000;
-
+    INTERVAL_MAX = 10000;
+    currentStage = 1000;
     nextInterval = null;
     items = [];
-
 
     constructor(ctx, itemImages, scaleRatio, speed) {
         this.ctx = ctx;
@@ -19,7 +18,7 @@ class ItemController {
         this.setNextItemTime();
     }
 
-    setNextItemTime() {
+    setNextItemTime() { // 아이템을 0 ~ 10초 사이마다 생성
         this.nextInterval = this.getRandomNumber(
             this.INTERVAL_MIN,
             this.INTERVAL_MAX
@@ -31,8 +30,15 @@ class ItemController {
     }
 
     createItem() {
-        const index = this.getRandomNumber(0, this.itemImages.length - 1);
-        const itemInfo = this.itemImages[index];
+        // 아이템이 만들어질 때, 현재 스테이지ID가 몇인지 알 수 있다.
+        let item_index = 0;
+        Item_Unlock.data.map((item, index) => {
+            if (item.stage_id === this.currentStage) {
+                item_index = this.getRandomNumber(0, index);
+            }
+        });
+
+        const itemInfo = this.itemImages[item_index];
         const x = this.canvas.width * 1.5;
         const y = this.getRandomNumber(
             10,
@@ -46,7 +52,8 @@ class ItemController {
             y,
             itemInfo.width,
             itemInfo.height,
-            itemInfo.image
+            itemInfo.image,
+            itemInfo.score
         );
 
         this.items.push(item);
@@ -54,8 +61,9 @@ class ItemController {
 
 
     update(gameSpeed, deltaTime) {
-        if(this.nextInterval <= 0) {
-            this.createItem();
+        if (this.nextInterval <= 0) {
+            if(this.currentStage !== 1000)
+                this.createItem();
             this.setNextItemTime();
         }
 
@@ -80,6 +88,15 @@ class ItemController {
                 itemId: collidedItem.id
             }
         }
+    }
+
+    getItemScore(itemId) {  // 아이템에 따라 점수 반환
+        const score = this.items.find(id => itemId).score;
+        return score;
+    }
+
+    setCurrentStage(currentStage) {
+        this.currentStage = currentStage;
     }
 
     reset() {

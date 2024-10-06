@@ -1,5 +1,5 @@
 class Item {
-    constructor(ctx, id, x, y, width, height, image) {
+    constructor(ctx, id, x, y, width, height, image, score) {
         this.ctx = ctx;
         this.id = id;
         this.x = x;
@@ -7,6 +7,7 @@ class Item {
         this.width = width;
         this.height = height;
         this.image = image;
+        this.score = score;
     }
 
     update(speed, gameSpeed, deltaTime, scaleRatio) {

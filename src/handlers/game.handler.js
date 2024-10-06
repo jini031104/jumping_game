@@ -1,11 +1,14 @@
 import { getGameAssets } from '../init/assets.js';
 import { clearStage, getStage, setStage } from '../models/stage.model.js';
+import { createItem, getItem } from '../models/item.model.js'
 import totalScoreCalculate from './score.handler.js';
 
 export const gameStart = (uuid, payload) => {
     // 서버 메모리에 있는 게임 에셋에서 stage 정보를 가지고 온다.
     const {stages} = getGameAssets();
     clearStage(uuid);
+    createItem(uuid);
+
     console.log(`gameStart: ${uuid}`);
     // stages 배열의 0번째 = 첫번째 스테이지
     // 게임이 시작되는 시간을 넣어준다.
@@ -19,7 +22,7 @@ export const gameEnd = (uuid, payload) => {
     // 클라이언트는 게임 종료 시, timestamp와 총 점수를 띄워야 한다.
     // 구조 분해 할당으로 payload를 쪼개어 저장
     // timestamp의 이름을 gameEndTime으로 변경
-    const {timestamp: gameEndTime, score: score} = payload;
+    const {timestamp: gameEndTime, score: score, itme:itme } = payload;
     const currentStages = getStage(uuid);  // 유저의 현재 스테이지
 
     if(currentStages.length === 0) {
@@ -28,7 +31,7 @@ export const gameEnd = (uuid, payload) => {
 
     // 각 스테이지의 지속 시간 계산하여 총 점수 계산
     const {stages} = getGameAssets();
-    let totalScore = totalScoreCalculate(stages, currentStages);
+    let totalScore = totalScoreCalculate(stages, currentStages, getItem(uuid));
 
     // 점수와 timestamp를 검증(절대값 사용)
     // 오차범위 5

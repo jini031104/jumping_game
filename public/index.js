@@ -6,6 +6,8 @@ import ItemController from './ItemController.js';
 import './Socket.js';
 import { sendEvent } from './Socket.js';
 
+import itmeData from '../assets/item.json' with { type: 'json' };
+
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
@@ -36,12 +38,7 @@ const CACTI_CONFIG = [
 ];
 
 // 아이템
-const ITEM_CONFIG = [
-  { width: 50 / 1.5, height: 50 / 1.5, id: 1, image: 'images/items/pokeball_red.png' },
-  { width: 50 / 1.5, height: 50 / 1.5, id: 2, image: 'images/items/pokeball_yellow.png' },
-  { width: 50 / 1.5, height: 50 / 1.5, id: 3, image: 'images/items/pokeball_purple.png' },
-  { width: 50 / 1.5, height: 50 / 1.5, id: 4, image: 'images/items/pokeball_cyan.png' },
-];
+const ITEM_CONFIG = itmeData.data;
 
 // 게임 요소들
 let player = null;
@@ -100,12 +97,13 @@ function createSprites() {
       id: item.id,
       width: item.width * scaleRatio,
       height: item.height * scaleRatio,
+      score: item.score
     };
   });
 
   itemController = new ItemController(ctx, itemImages, scaleRatio, GROUND_SPEED);
 
-  score = new Score(ctx, scaleRatio);
+  score = new Score(ctx, scaleRatio, itemController);
 }
 
 function getScaleRatio() {
@@ -144,8 +142,7 @@ function showGameOver() {
   const y = canvas.height / 2;
   ctx.fillText('GAME OVER', x, y);
   if(gameEndCheck) {
-    console.log('client_score: ', score);
-    sendEvent(3, {timestamp: Date.now(), score: score});
+    sendEvent(3, {timestamp: Date.now(), score: score, itme: itemController});
   }
 }
 
@@ -227,6 +224,7 @@ function gameLoop(currentTime) {
   }
   const collideWithItem = itemController.collideWith(player);
   if (collideWithItem && collideWithItem.itemId) {
+    // 아이템 먹었을 때 동작
     score.getItem(collideWithItem.itemId);
   }
 
