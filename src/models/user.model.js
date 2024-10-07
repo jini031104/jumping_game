@@ -1,3 +1,7 @@
+import redisClient from "../init/redis.js";
+
+const USER_KEY_PREFIX = 'user:';
+
 const users =[];
 
 // 서버 메모리에 유저의 세션(소켓ID) 저장

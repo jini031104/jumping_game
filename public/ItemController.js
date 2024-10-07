@@ -31,6 +31,7 @@ class ItemController {
 
     createItem() {
         // 아이템이 만들어질 때, 현재 스테이지ID가 몇인지 알 수 있다.
+        // 현재 스테이지ID를 바탕으로 아이템을 생성한다.(0 ~ 현재 스테이지 사이에서 생성) 
         let item_index = 0;
         Item_Unlock.data.map((item, index) => {
             if (item.stage_id === this.currentStage) {
@@ -91,7 +92,7 @@ class ItemController {
     }
 
     getItemScore(itemId) {  // 아이템에 따라 점수 반환
-        const score = this.items.find(id => itemId).score;
+        const score = this.items.find(() => itemId).score;
         return score;
     }
 

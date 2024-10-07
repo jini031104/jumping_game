@@ -16,6 +16,7 @@ class Score {
   }
 
   update(deltaTime) {
+    // 스테이지 기준으로 점수 획득
     this.score += deltaTime * 0.001 * stage[this.level].scorePerSecond;
 
     // 준비된 스테이지 데이터 길이보다 작고
