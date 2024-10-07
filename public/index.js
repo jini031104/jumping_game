@@ -4,7 +4,7 @@ import CactiController from './CactiController.js';
 import Score from './Score.js';
 import ItemController from './ItemController.js';
 import './Socket.js';
-import { sendEvent } from './Socket.js';
+import { sendEvent, socket } from './Socket.js';
 
 import itmeData from '../assets/item.json' with { type: 'json' };
 
@@ -159,10 +159,15 @@ function updateGameSpeed(deltaTime) {
   gameSpeed += deltaTime * GAME_SPEED_INCREMENT;
 }
 
+let isConnected = false;
 function reset() {
+  if (!isConnected) {
+    console.log('소켓 연결이 완료되지 않았습니다. 게임을 시작할 수 없습니다.');
+    return;
+  }
   hasAddedEventListenersForRestart = false;
   gameover = false;
-  waitingToStart = false;
+  waitingToStart = false; // 이게 있어야 게임이 진행됨...
   gameEndCheck = true;
 
   ground.reset();
@@ -170,7 +175,6 @@ function reset() {
   score.reset();
   gameSpeed = GAME_SPEED_START;
   const startTime = Date.now();
-  console.log(`game Start: ${startTime}`);
   sendEvent(2, {timestamp: startTime});  // 게임 시작 핸들러 작동
 }
 
@@ -251,4 +255,11 @@ function gameLoop(currentTime) {
 // 게임 프레임을 다시 그리는 메서드
 requestAnimationFrame(gameLoop);
 
-window.addEventListener('keyup', reset, { once: true });
+// 연결이 완료되었을 때만 게임이 시작되도록 이벤트 리스너 추가
+socket.on('connect', () => {
+  console.log('소켓 연결이 완료되었습니다.');
+  isConnected = true;
+
+  // 소켓 연결 후에만 reset 이벤트 리스너 추가
+  window.addEventListener('keyup', reset, { once: true });
+});

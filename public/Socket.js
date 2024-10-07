@@ -28,12 +28,12 @@ socket.on('connection', (data) => {
 // 클라이언트에서도 똑같이 처리한다.
 const sendEvent = (handlerId, payload) => {
     console.log(`sendEvent: ${userId}`);
-    socket.emit('event', {
-        userId,
-        clientVersion: CLIENT_VERSION,
-        handlerId,
-        payload
-    });
+        socket.emit('event', {
+            userId,
+            clientVersion: CLIENT_VERSION,
+            handlerId,
+            payload
+        });
 };
 
-export {sendEvent};
+export {sendEvent, socket};

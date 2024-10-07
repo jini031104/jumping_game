@@ -35,5 +35,5 @@ export const userGetItemHandler = (userId, payload) => {
     }
 
     setItem(userId, itemId);
-    return {status: 'success', message: `item: ${itemId}, userId: ${userId}`};
+    return {status: 'success', message: `item: ${itemId}`};
 };
