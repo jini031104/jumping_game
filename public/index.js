@@ -122,7 +122,6 @@ function setScreen() {
   scaleRatio = getScaleRatio();
   canvas.width = GAME_WIDTH * scaleRatio;
   canvas.height = GAME_HEIGHT * scaleRatio;
-  console.log('setScreen을 설정');  // 화면 크기가 바뀔 때마다 score이 초기화됨...
   createSprites();
 }
 
@@ -257,7 +256,7 @@ requestAnimationFrame(gameLoop);
 
 // 연결이 완료되었을 때만 게임이 시작되도록 이벤트 리스너 추가
 socket.on('connect', () => {
-  console.log('소켓 연결이 완료되었습니다.');
+  console.log('소켓 연결 완료');
   isConnected = true;
 
   // 소켓 연결 후에만 reset 이벤트 리스너 추가

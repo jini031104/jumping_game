@@ -6,10 +6,6 @@ import totalScoreCalculate from './score.handler.js';
 export const moveStageHandler = (userId, payload) => {
     // 유저의 현재 스테이지 배열을 가져온다.
     const currentStages = getStage(userId);
-    // console.log(userId);
-    // console.log(currentStages.length);
-    // console.log("currentStages: ");
-    // console.log(currentStages); 
     if(!currentStages.length) {
         return {status: 'fail', message: 'No stages found for user(stage handler)'};
     }
@@ -38,12 +34,11 @@ export const moveStageHandler = (userId, payload) => {
         }
     });
 
-    // if(score < stages.data[stage_index].score - 0.5 || score > stages.data[stage_index].score + 1) {
-    //     return {status: 'fail', message: 'Invalid elapsed time'};
-    // }
+    if(score < stages.data[stage_index].score - 1 || score > stages.data[stage_index].score + 1) {
+        return {status: 'fail', message: 'Invalid elapsed time'};
+    }
 
     const serverTime = Date.now();  // 현재 시간
-    console.log('next stage');
     setStage(userId, payload.targetStage, serverTime);
     return {status: 'Success', message: 'Next stage!'};
 };

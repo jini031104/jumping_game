@@ -14,7 +14,7 @@ const totalScoreCalculate = (stages, currentStages, userGetItem) => {
 
         let currentStage = currentStages[i];
         let time = (serverTime - currentStage.timestamp) / 1000;
-        console.log(currentStage, ' time: ', time, ' score: ', stages.data[i].scorePerSecond);
+        console.log(currentStage, ' time: ', time);
         totalScore += time * stages.data[i].scorePerSecond;
     }
 
