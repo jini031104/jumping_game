@@ -1,4 +1,4 @@
-import redisClient from "../init/redis.js";
+// import redisClient from "../init/redis.js";
 
 const USER_KEY_PREFIX = 'user:';
 
